@@ -95,7 +95,7 @@
     box = document.createElement("div");
     box.className = "cwc"; box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "Cookie preferences");
     var current = settings && state ? (granted() ? " (On)" : " (Off)") : "";
-    box.innerHTML = "<p>We use <a href=\"" + privacyHref() + "\">cookies</a>." + current + "</p>" +
+    box.innerHTML = "<p>We use cookies to improve your experience." + current + "</p>" +
       '<div class="cwc-row"><button type="button" class="cwc-yes">Accept</button><button type="button" class="cwc-no">' + (settings && granted() ? "Withdraw" : "Decline") + "</button></div>";
     box.querySelector(".cwc-yes").addEventListener("click", function () { setChoice("granted"); });
     box.querySelector(".cwc-no").addEventListener("click", function () { setChoice("declined"); });

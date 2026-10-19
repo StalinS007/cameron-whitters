@@ -79,14 +79,13 @@
   }
 
   /* ---------- Banner UI (self-contained styles so it works on every page) ---------- */
-  var css = ".cwc{position:fixed;z-index:70;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));max-width:560px;margin:0 auto;background:#121212;border:1px solid rgba(184,155,106,.45);color:#c8c3b9;font:14px/1.55 Inter,system-ui,-apple-system,Helvetica,Arial,sans-serif;padding:18px 20px;box-shadow:0 12px 40px rgba(0,0,0,.6)}" +
-    ".cwc b{display:block;font-family:Oswald,'Arial Narrow',sans-serif;font-weight:500;font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:#f3f0ea;margin-bottom:6px}" +
-    ".cwc p{margin:0}.cwc a{color:#d2b88c;text-decoration:underline;text-underline-offset:3px}" +
-    ".cwc-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}" +
-    ".cwc button{font:500 13px/1 Oswald,'Arial Narrow',sans-serif;letter-spacing:.2em;text-transform:uppercase;padding:13px 20px;cursor:pointer;border:1px solid #b89b6a}" +
+  var css = ".cwc{position:fixed;z-index:70;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;background:#121212;border:1px solid rgba(184,155,106,.45);color:#c8c3b9;font:13px/1.4 Inter,system-ui,-apple-system,Helvetica,Arial,sans-serif;padding:10px 10px 10px 14px;box-shadow:0 8px 28px rgba(0,0,0,.55);display:flex;align-items:center;gap:12px}" +
+    ".cwc p{margin:0;flex:1 1 auto;min-width:0}.cwc a{color:#d2b88c;text-decoration:underline;text-underline-offset:3px}" +
+    ".cwc-row{display:flex;gap:6px;flex:none}" +
+    ".cwc button{font:500 11px/1 Oswald,'Arial Narrow',sans-serif;letter-spacing:.16em;text-transform:uppercase;padding:9px 12px;cursor:pointer;border:1px solid #b89b6a}" +
     ".cwc .cwc-yes{background:#b89b6a;color:#0b0b0b}.cwc .cwc-no{background:transparent;color:#f3f0ea;border-color:rgba(243,240,234,.35)}" +
-    ".cwc button:focus-visible{outline:2px solid #f0c46e;outline-offset:2px}.cwc-status{margin-top:8px;font-size:13px;color:#8d887f}" +
-    "@media (max-width:520px){.cwc button{flex:1 1 auto}}";
+    ".cwc button:focus-visible{outline:2px solid #f0c46e;outline-offset:2px}" +
+    "@media (max-width:420px){.cwc{font-size:12px;gap:8px;padding:8px 8px 8px 12px}.cwc button{padding:8px 10px;letter-spacing:.12em}}";
   var box = null;
   function privacyHref() { var path = location.pathname; return /\/(apply|privacy|terms)\/?$/.test(path) ? "../privacy/" : "privacy/"; }
   function show(settings) {
@@ -95,10 +94,9 @@
     if (box) box.remove();
     box = document.createElement("div");
     box.className = "cwc"; box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "Cookie preferences");
-    var status = settings && state ? '<p class="cwc-status">Current choice: ' + (granted() ? "advertising cookies allowed" : "advertising cookies declined") + ".</p>" : "";
-    box.innerHTML = "<b>Cookies</b><p>We'd like to use advertising cookies, including Meta's, to measure our marketing. The site and the application work the same either way, and your application answers are never shared with Meta. <a href=\"" + privacyHref() + "\">Privacy Policy</a></p>" + status +
-      '<div class="cwc-row"><button type="button" class="cwc-yes">Accept</button><button type="button" class="cwc-no">' + (settings && granted() ? "Withdraw consent" : "Decline") + "</button></div>" +
-      (settings && granted() ? '<p class="cwc-status">Withdrawing while you are part-way through the application restarts it.</p>' : "");
+    var current = settings && state ? (granted() ? " (On)" : " (Off)") : "";
+    box.innerHTML = "<p>We use <a href=\"" + privacyHref() + "\">cookies</a>." + current + "</p>" +
+      '<div class="cwc-row"><button type="button" class="cwc-yes">Accept</button><button type="button" class="cwc-no">' + (settings && granted() ? "Withdraw" : "Decline") + "</button></div>";
     box.querySelector(".cwc-yes").addEventListener("click", function () { setChoice("granted"); });
     box.querySelector(".cwc-no").addEventListener("click", function () { setChoice("declined"); });
     document.body.appendChild(box);

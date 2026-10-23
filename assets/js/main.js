@@ -84,6 +84,33 @@
   vsl.addEventListener("click", playVsl);
   vsl.addEventListener("keydown", (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), playVsl()));
 
+  /* ---------- Case studies: "testimonial" link scrolls up to that card in the strip ---------- */
+  $$("[data-testi]").forEach((a) =>
+    a.addEventListener("click", (e) => {
+      const card = $(a.dataset.testi), strip = card && card.closest(".quotes-strip");
+      if (!card || !strip) return;
+      e.preventDefault();
+      const behavior = reduceMotion ? "auto" : "smooth";
+      strip.scrollTo({ left: card.offsetLeft - strip.offsetLeft, behavior });
+      window.scrollTo({ top: strip.getBoundingClientRect().top + window.scrollY - 140, behavior });
+      card.classList.add("testi-flash");
+      setTimeout(() => card.classList.remove("testi-flash"), 2200);
+      track("case_testimonial_click", { client: a.dataset.testi });
+    })
+  );
+
+  /* ---------- About photos: swipe, arrows and dots ---------- */
+  const aboutSlides = $("#aboutSlides");
+  if (aboutSlides) {
+    const media = aboutSlides.closest(".about-c-media");
+    const dots = $$(".about-dots button", media);
+    const go = (i) => aboutSlides.scrollTo({ left: Math.max(0, Math.min(dots.length - 1, i)) * aboutSlides.clientWidth, behavior: reduceMotion ? "auto" : "smooth" });
+    const current = () => Math.round(aboutSlides.scrollLeft / aboutSlides.clientWidth);
+    aboutSlides.addEventListener("scroll", () => dots.forEach((d, i) => d.classList.toggle("on", i === current())), { passive: true });
+    dots.forEach((d, i) => d.addEventListener("click", () => go(i)));
+    $$(".about-arrow", media).forEach((b) => b.addEventListener("click", () => go(current() + Number(b.dataset.step))));
+  }
+
   /* ---------- FAQ accordion ---------- */
   $$(".faq-item").forEach((item) => {
     const q = $(".faq-q", item);
@@ -120,7 +147,7 @@
   };
   $$("[data-lb]").forEach((el) =>
     el.addEventListener("click", () => {
-      const box = el.closest(".proof-strip, .wall, .quotes-strip, .cases");
+      const box = el.closest(".proof-strip, .wall, .quotes-strip, .cases, .about-c-media");
       group = box ? $$("[data-lb]", box).filter((g) => g.offsetParent !== null) : [el];
       if (!group.includes(el)) group = [el];
       lb.classList.toggle("single", group.length < 2);

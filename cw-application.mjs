@@ -180,7 +180,7 @@ export function createAttribution({
       }
       hidden.first_captured_at = first.captured_at;
       hidden.latest_captured_at = latest.captured_at;
-      hidden.marketing_consent = 'granted';
+      hidden.marketing_consent = 'not_asked';   // No cookie banner since 26 Oct 2026: campaign details are sent for every applicant.
       hidden.consent_captured_at = grantTime;
       // Informational opaque reference only. The server must independently validate its record.
       try { hidden.consent_receipt = safeId(consent.getReceipt?.()); } catch { hidden.consent_receipt = ''; }

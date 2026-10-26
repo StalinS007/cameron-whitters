@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="origin">
   <!-- Added: Meta Pixel loader and the window.CWConsent adapter, resolved synchronously before the module below imports bootstrap. -->
-  <script src="../assets/js/consent.js?v=20261026-pixel-all-1"></script>
+  <script src="../assets/js/consent.js?v=20261026-matching-1"></script>
   <title>Apply to Work With Cameron</title>
   <meta name="description" content="Apply for a private six-month physique and performance transformation with Cameron Whitters.">
   <link rel="stylesheet" href="https://embed.typeform.com/next/css/widget.css">
@@ -36,10 +36,13 @@
     <p class="cw-cookie-link"><a href="../privacy/">Privacy</a></p>
   </main>
   <script type="module">
-    import { attribution } from '../cw-site-bootstrap.mjs?v=20261026-pixel-all-1';
-    import { mountApplication } from '../cw-application.mjs?v=20261026-pixel-all-1';
+    import { attribution } from '../cw-site-bootstrap.mjs?v=20261026-matching-1';
+    import { mountApplication } from '../cw-application.mjs?v=20261026-matching-1';
     import { hostConfig } from '../host-config.mjs';
     const status = document.querySelector('#status');
+    // The Pixel starts before the Typeform loads, so its fresh _fbp/_fbc cookies can reach the form's
+    // hidden fields. Bootstrap has already captured the visit and cleaned the URL by this point.
+    window.CWReleasePixel && window.CWReleasePixel();
     try {
       await new Promise((resolve, reject) => {
         if (window.tf?.createWidget) return resolve();
@@ -62,8 +65,6 @@
           }
         },
       });
-      // Added: the Pixel starts only after bootstrap has captured and cleaned the URL.
-      window.CWReleasePixel && window.CWReleasePixel();
     } catch {
       status.textContent = 'The application could not load. Please refresh this page or try again shortly.';
     }

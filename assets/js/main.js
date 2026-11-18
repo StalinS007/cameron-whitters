@@ -175,7 +175,9 @@
       window.scrollTo({ top: strip.getBoundingClientRect().top + window.scrollY - 140, behavior });
       card.classList.add("testi-flash");
       setTimeout(() => card.classList.remove("testi-flash"), 2200);
-      track("case_testimonial_click", { client: a.dataset.testi });
+      const ev = a.dataset.testiEvent || "case_testimonial_click";   // "hero_photo_click" for the client photos on the first screen
+      track(ev, { client: a.dataset.testi });
+      if (a.dataset.testiEvent) window.CWTrack && window.CWTrack(ev);   // first-screen photo taps also go to Clarity + GA4
     })
   );
 
@@ -230,7 +232,8 @@
       let el = trigger;
       const cl = el.closest("[data-clone]");   // a cloned testimonial card stands in for its real one
       if (cl) { const realCard = $$(":scope > :not([data-clone])", cl.parentElement)[Number(cl.dataset.clone)]; el = (realCard && $("[data-lb]", realCard)) || el; }
-      const box = el.closest(".proof-strip, .wall, .quotes-strip, .cases, .about-c-media");
+      const box = el.closest(".hero-proof, .proof-strip, .wall, .quotes-strip, .cases, .about-c-media");
+      if (trigger.dataset.lbEvent) { track(trigger.dataset.lbEvent, { client: trigger.dataset.lb }); window.CWTrack && window.CWTrack(trigger.dataset.lbEvent); }   // first-screen client photos: taps go to Clarity + GA4
       group = box ? $$("[data-lb]", box).filter((g) => g.offsetParent !== null && !g.closest("[data-clone]")) : [el];
       if (!group.includes(el)) group = [el];
       lb.classList.toggle("single", group.length < 2);
